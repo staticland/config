@@ -1,0 +1,32 @@
+server {
+  listen 80;
+  return 301 https://$host$request_uri;
+}
+
+server {
+  listen 443 ssl;
+  server_name api.static.land;
+  client_max_body_size 20M;
+
+  ssl_certificate /etc/letsencrypt/live/api.static.land/fullchain.pem;
+  ssl_certificate_key /etc/letsencrypt/live/api.static.land/privkey.pem;
+  ssl_trusted_certificate /etc/letsencrypt/live/api.static.land/fullchain.pem;
+
+  ssl_session_timeout 5m;
+  ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+  ssl_ciphers 'EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH';
+  ssl_prefer_server_ciphers on;
+  ssl_stapling on;
+  ssl_stapling_verify on;
+
+  ssl_session_cache shared:SSL:10m;
+  ssl_dhparam /etc/ssl/certs/dhparam.pem;
+
+  location / {
+    proxy_pass http://localhost:3322;
+  }
+
+  location ~ /.well-known {
+    proxy_pass http://localhost:5555;
+  }
+}
