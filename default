@@ -27,6 +27,7 @@ server {
   }
 
   location ~ /.well-known {
-    proxy_pass http://localhost:5555;
+    root /home/ubuntu/staticland-api/certs/$http_host;
+    try_files $uri $uri/;
   }
 }
