@@ -27,7 +27,7 @@ server {
   }
 
   location ~ /.well-known {
-    root /home/ubuntu/staticland-api/certs/$http_host;
+    root /home/staticland/staticland-api/sites/certs/$http_host;
     try_files $uri $uri/;
   }
 }
