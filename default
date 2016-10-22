@@ -1,12 +1,28 @@
 server {
   listen 80;
+
+  location / {
+    root /home/ubuntu/staticland-api/html;
+  }
+
+  location ~ /.well-known {
+    root /home/ubuntu/staticland-api/sites/certs/$http_host;
+    try_files $uri $uri/ =404;
+  }
+
+  error_page 400 401 402 403 404 500 /home/ubuntu/staticland-api/html/404.html;
+}
+
+server {
+  listen 80;
+  server_name api.static.land;
   return 301 https://$host$request_uri;
 }
 
 server {
   listen 443 ssl;
   server_name api.static.land;
-  client_max_body_size 20M;
+  client_max_body_size 100M;
 
   ssl_certificate /etc/letsencrypt/live/api.static.land/fullchain.pem;
   ssl_certificate_key /etc/letsencrypt/live/api.static.land/privkey.pem;
@@ -27,7 +43,9 @@ server {
   }
 
   location ~ /.well-known {
-    root /home/staticland/staticland-api/sites/certs/$http_host;
+    root /home/ubuntu/staticland-api/sites/certs/$http_host;
     try_files $uri $uri/;
   }
+
+  error_page 400 401 402 403 404 500 /home/ubuntu/staticland-api/html/404.html;
 }
